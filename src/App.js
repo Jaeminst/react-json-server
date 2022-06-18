@@ -11,8 +11,8 @@ function App() {
         <div className='logoName'>Jaeminst Blog</div>
       </div>
 
-      {/* <button onClick={ articleRename } >버튼</button>
-      <button onClick={ articleSort } >정렬</button> */}
+      {/* <button onClick={ Retitle }>변경</button> */}
+      {/* <button onClick={ articleSort } >정렬</button> */}
 
 
       <Lists></Lists>
@@ -24,15 +24,10 @@ function App() {
 }
 
 
-// function articleRename(){
-//   var newArticle = [...article];
-//   newArticle[0] = '여자 코트 추천';
-//   reArticle( newArticle );
-// }
 // function articleSort(){
-//   var newArticle = [...article];
+//   var newArticle = [...lists];
 //   newArticle = newArticle.sort();
-//   reArticle( newArticle );
+//   setTitle( newArticle );
 // }
 // function articleNumberSort(){
 //   var newArticle = [...article];
@@ -61,14 +56,13 @@ const lists = [
   }
 ]
 
-function Lists(){
-  let articles = [...lists]
-  return articles.map((e)=>{
-    return (
-      <List key={ e.id } title={ e.title } likes={ e.likes } today={ e.today }></List>
-    )
-  })
-}
+// function articleRename(props){
+//   console.log(props)
+//   console.log(setTitle())
+//   var newArticle = [...lists];
+//   newArticle[0] = '여자 코트 추천';
+//   setTitle( newArticle );
+// }
 
 function List(props){
   let [title, setTitle] = useState(props.title);
@@ -82,6 +76,14 @@ function List(props){
       <hr/>
     </div>
   )
+}
+
+function Lists(){
+  return lists.map((e)=>{
+    return (
+      <List key={ e.id } {...e}></List>
+    )
+  })
 }
 
 function Modal(props){
