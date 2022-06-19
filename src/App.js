@@ -1,6 +1,6 @@
 
 import './App.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 function App() {
 
@@ -24,6 +24,13 @@ function App() {
 }
 
 
+// function articleRename(props){
+//   console.log(props)
+//   console.log(setTitle())
+//   var newArticle = [...lists];
+//   newArticle[0] = '여자 코트 추천';
+//   setTitle( newArticle );
+// }
 // function articleSort(){
 //   var newArticle = [...lists];
 //   newArticle = newArticle.sort();
@@ -35,55 +42,44 @@ function App() {
 //   reArticle( newArticle );
 // }
 
-const lists = [
-  {
-    id: 1,
-    title: "남자 코트 추천",
-    likes: 0,
-    today: new Date()
-  },
-  {
-    id: 2,
-    title: "강남 우동 맛집",
-    likes: 0,
-    today: new Date()
-  },
-  {
-    id: 3,
-    title: "리액트 독학",
-    likes: 0,
-    today: new Date()
-  }
-]
-
-// function articleRename(props){
-//   console.log(props)
-//   console.log(setTitle())
-//   var newArticle = [...lists];
-//   newArticle[0] = '여자 코트 추천';
-//   setTitle( newArticle );
-// }
-
-function List(props){
-  let [title, setTitle] = useState(props.title);
-  let [likes, setLikes] = useState(props.likes);
-  let [today, setToday] = useState(props.today);
-  let todate = `${today.getFullYear()}년 ${today.getMonth()+1}월 ${today.getDate()}일`
+const Lists = () => {
+  const [listArr, setListArr] = useState([]);
+  useEffect(() => {
+    fetch('http://localhost:3004/data', {
+      method: 'GET',
+    })
+    .then(res => res.json())
+    .then(data => {
+      setListArr(data);
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+      console.log("server is down!!")   
+    });
+  }, [])
   return (
-    <div className='list'>
-      <h3> { title } <span onClick={ ()=>{ setLikes(likes + 1) } }> 👍 </span> { likes } </h3>
-      <p> { todate } </p>
-      <hr/>
+    <div className='lists'>
+      {listArr.map(list => {
+        return (
+          <List key={list.id} {...list}></List>
+        )
+      })}
     </div>
   )
 }
 
-function Lists(){
-  return lists.map((e)=>{
-    return (
-      <List key={ e.id } {...e}></List>
-    )
-  })
+
+const List = (props) => {
+  let [title, setTitle] = useState(props.title);
+  let [likes, setLikes] = useState(props.likes);
+  let [today, setToday] = useState(props.today);
+  return (
+    <div className='list'>
+      <h3> { title } <span onClick={ ()=>{ setLikes(likes + 1) } }> 👍 </span> { likes } </h3>
+      <p> { today } </p>
+      <hr/>
+    </div>
+  )
 }
 
 function Modal(props){
