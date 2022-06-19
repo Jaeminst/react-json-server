@@ -3,20 +3,65 @@
     {
       "id": 1,
       "title": "남자 코트 추천",
-      "likes": 3,
+      "content": "추천1, 추천2, 추천3",
+      "likes": 6,
       "today": "2022. 6. 19."
     },
     {
       "id": 2,
       "title": "강남 우동 맛집",
-      "likes": 0,
+      "content": "맛집1, 맛집2, 맛집3",
+      "likes": 3,
       "today": "2022. 6. 19."
     },
     {
       "id": 3,
       "title": "리액트 독학",
-      "likes": 0,
+      "content": "재미있어요!",
+      "likes": 5,
       "today": "2022. 6. 19."
+    },
+    {
+      "id": 4,
+      "title": "추가 게시글 1",
+      "content": "content1, content2, content3",
+      "likes": 7,
+      "today": "2022. 6. 20."
+    },
+    {
+      "id": 5,
+      "title": "추가 게시글 2",
+      "content": "content1, content2, content3",
+      "likes": 7,
+      "today": "2022. 6. 20."
+    },
+    {
+      "id": 6,
+      "title": "추가 게시글 3",
+      "content": "content1, content2, content3",
+      "likes": 5,
+      "today": "2022. 6. 20."
+    },
+    {
+      "id": 7,
+      "title": "ㅁㄴㅇㄹ",
+      "content": "ㅁㄴㅇㄹ",
+      "likes": 0,
+      "today": "2022-06-19T23:44:25.095Z"
+    },
+    {
+      "id": 8,
+      "title": "ㅁㄴㅇ",
+      "content": "ㅁㄴㅇ",
+      "likes": 0,
+      "today": "2022-06-19T23:44:45.824Z"
+    },
+    {
+      "id": 9,
+      "title": "ㅁㅇㅁㅇ",
+      "content": "ㅁㅇㅁㅇ",
+      "likes": 0,
+      "today": "2022. 6. 20."
     }
   ]
 }

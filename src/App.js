@@ -3,6 +3,103 @@ import './App.css';
 import { useEffect, useState } from 'react';
 
 function App() {
+  const [listArr, setListArr] = useState([]);
+  const [listModal, setListModal] = useState([]);
+  let [likeCount, setLikeCount] = useState(0);
+  let [modal, setModal] = useState(false);
+  let [titleNum, setTitleNum]=useState(0);
+  let [inputTitle, setInputTitle]=useState('');
+  let [inputContent, setInputContent]=useState('');
+
+  useEffect(() => {
+    fetch('http://localhost:3004/data', {
+      method: 'GET',
+    })
+    .then(res => res.json())
+    .then(data => {
+      // setListArr(data);
+      setListArr(data)
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+      console.log("server is down!!")   
+    });
+  }, [inputTitle, likeCount])
+
+  useEffect(() => {
+    fetch(`http://localhost:3004/data/${titleNum}`, {
+      method: 'GET',
+    })
+    .then(res => res.json())
+    .then(data => {
+      setListModal(data)
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+      console.log("server is down!!")   
+    });
+  }, [titleNum])
+
+  const putData = (id, data) => {
+    fetch(`http://localhost:3004/data/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+    .then((response) => response.json())
+    .then((data) => console.log(data));
+  }
+
+  const likeCountFunc = (id, likes) => {
+    const isList = (e) => e.id === id
+    let copyList = {...listArr[listArr.findIndex(isList)]};
+    setLikeCount(likes++)
+    copyList.likes++
+    putData(id, copyList)
+  };
+
+  function Modal(){
+    return (
+      <div className="modal">
+        <h2>{ listModal.title }</h2>
+        <p>{ listModal.today }</p>
+        <p>{ listModal.content }</p>
+      </div>
+    );
+  }
+
+  const renderModal = (e) => {
+    e === titleNum ? (modal ? setModal(false) : setModal(true)) : setModal(true)
+  }
+
+  const writeBtn = () => {
+    const copyData = [...listArr]
+    const inputId = copyData.length + 1
+    const inputData = {
+      id: inputId,
+      title: inputTitle,
+      content: inputContent,
+      likes: 0,
+      today: new Date().toLocaleDateString()
+    }
+
+    fetch(`http://localhost:3004/data`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(inputData),
+    })
+    .then((response) => response.json())
+    .then((data) => console.log(data));
+
+    // copyData.push(inputData)
+    // setListArr(copyData)
+    setInputTitle('')
+    setInputContent('')
+  }
 
   return (
     <div className="App">
@@ -15,9 +112,30 @@ function App() {
       {/* <button onClick={ articleSort } >정렬</button> */}
 
 
-      <Lists></Lists>
+      
+      {listArr.map((list, i) => {
+        return (
+          <div className='list' key={i}>
+            <h3> { list.title } <span onClick={ ()=>{likeCountFunc(list.id, list.likes)} }> 💖 </span> { list.likes } </h3>
+            <p> { list.today } </p>
+            <button onClick={ () => { 
+              renderModal(list.id)
+              setTitleNum(list.id)
+              } }>보기</button>
+            {/* <button onClick={ () => handleTitle }>편집</button> */}
+            <hr/>
+          </div>
+        )
+      })}
 
-      <Modal title='제목' date={ '2022년 6월 18일' } content='상세 내용'></Modal>
+      <div className="publish">
+        <input placeholder='Title' onChange={(e)=>{ setInputTitle(e.target.value) }} value={inputTitle} />
+        <input placeholder='Content' onChange={(e)=>{ setInputContent(e.target.value) }} value={inputContent} />
+        <input readOnly value={new Date()} />
+        <button onClick={ () => { writeBtn() } }>저장</button>
+      </div>
+      
+      {modal === true ? <Modal titleNum={titleNum} /> : null}
 
     </div>
   );
@@ -42,54 +160,5 @@ function App() {
 //   reArticle( newArticle );
 // }
 
-const Lists = () => {
-  const [listArr, setListArr] = useState([]);
-  useEffect(() => {
-    fetch('http://localhost:3004/data', {
-      method: 'GET',
-    })
-    .then(res => res.json())
-    .then(data => {
-      setListArr(data);
-    })
-    .catch((error) => {
-      console.error('Error:', error);
-      console.log("server is down!!")   
-    });
-  }, [])
-  return (
-    <div className='lists'>
-      {listArr.map(list => {
-        return (
-          <List key={list.id} {...list}></List>
-        )
-      })}
-    </div>
-  )
-}
-
-
-const List = (props) => {
-  let [title, setTitle] = useState(props.title);
-  let [likes, setLikes] = useState(props.likes);
-  let [today, setToday] = useState(props.today);
-  return (
-    <div className='list'>
-      <h3> { title } <span onClick={ ()=>{ setLikes(likes + 1) } }> 👍 </span> { likes } </h3>
-      <p> { today } </p>
-      <hr/>
-    </div>
-  )
-}
-
-function Modal(props){
-  return (
-    <div className='modal'>
-      <h2>{ props.title }</h2>
-      <p>{ props.date }</p>
-      <p>{ props.content }</p>
-    </div>
-  )
-}
 
 export default App;
